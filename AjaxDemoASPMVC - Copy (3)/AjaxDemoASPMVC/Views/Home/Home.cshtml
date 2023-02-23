@@ -1,0 +1,241 @@
+﻿<script>
+    $(document).ready(function () {
+        var empList = [];
+
+        $.ajax({
+            url: "/api/Employee",
+            type: "GET",
+            success: function (response) {
+                empList = response;
+                console.log(response);
+                var trHTML = '';
+                //$.each(response, function (i, item) {
+                //    trHTML += '<tr><td>' + item.firstname + '</td><td>' + item.lastname + '</td><td>' + "" + '</td></tr>';
+                //});
+                for (var i = 0; i < response.length; i++) {
+
+                   
+                    trHTML += '<tr>';
+
+                   
+                    trHTML += '<td>' + response[i].firstName + '</td>';
+                    trHTML += '<td>' + response[i].lastName + '</td>';
+                    trHTML += '<td>' + response[i].gender + '</td>';
+                    trHTML += '<td>' + response[i].department + '</td>';
+                    trHTML += '<td>';
+                    for (var j = 0; j < response[i].skills.length; j++) {
+                        trHTML += ' ' + response[i].skills[j] + ',';
+                    }
+                    trHTML += '</td>';
+                    trHTML += '</tr>';
+                }
+                $('#row').append(trHTML);
+            }
+        });
+
+
+        $("#btn").click(function () {
+
+            $.ajax({
+                url: "/api/Employee",
+                type: "GET",
+                success: function (response) {
+                    empList = response;
+                    console.log(response);
+                    var trHTML = '';
+                    //$.each(response, function (i, item) {
+                    //    trHTML += '<tr><td>' + item.firstname + '</td><td>' + item.lastname + '</td><td>' + "" + '</td></tr>';
+                    //});
+                    for (var i = 0; i < response.length; i++) {
+                        //trHTML += '<tr><td>' + response[i].firstName + '</td><td>' + response[i].lastName + '</td><td>' + "" + '</td></tr>';
+                        trHTML += '<tr>';
+                        //  trHTML += '<td>' + '<a href="/Home/Details/5">'+Details+ '</a>'+ '</td>'
+                        trHTML += '<td>' + response[i].firstName + '</td>';
+                        trHTML += '<td>' + response[i].lastName + '</td>';
+                        trHTML += '<td>' + response[i].gender + '</td>';
+                        trHTML += '<td>' + response[i].department + '</td>';
+                        trHTML += '<td>';
+                        for (var j = 0; j < response[i].skills.length; j++) {
+                            trHTML += ' ' + response[i].skills[j] + ',';
+                        }
+                        trHTML += '</td>';
+                        trHTML += '</tr>';
+                    }
+                    $('#row').append(trHTML);
+                }
+            });
+
+        });
+
+        $("#fNameBtn").click(function () {
+            console.log(empList);
+            let fName = $("#fName").val().toLowerCase();
+            console.log(fName);
+            let newList = empList.filter(record => {
+                console.log(record.firstName);
+                var str = record.firstName.toString().toLowerCase();
+                console.log(str.includes(fName));
+                return str.includes(fName);
+            });
+            $("#row").empty();
+            console.log(newList);
+            var trHTML = '';
+
+            //$.each(response, function (i, item) {
+            //    trHTML += '<tr><td>' + item.firstname + '</td><td>' + item.lastname + '</td><td>' + "" + '</td></tr>';
+            //});
+            for (var i = 0; i < newList.length; i++) {
+                //trHTML += '<tr><td>' + response[i].firstName + '</td><td>' + response[i].lastName + '</td><td>' + "" + '</td></tr>';
+                trHTML += '<tr>';
+
+                trHTML += '<td>' + newList[i].firstName + '</td>';
+                trHTML += '<td>' + newList[i].lastName + '</td>';
+                trHTML += '<td>' + newList[i].gender + '</td>';
+                trHTML += '<td>' + newList[i].department + '</td>';
+                trHTML += '<td>';
+                for (var j = 0; j < newList[i].skills.length; j++) {
+                    trHTML += ' ' + newList[i].skills[j] + ',';
+                }
+                trHTML += '</td>';
+                trHTML += '</tr>';
+            }
+            $('#row').append(trHTML);
+        });
+
+        $("#fName").change(function () {
+            console.log("called");
+            let choice = $("#dropdown").val();
+            let searchText = $("#fName").val().toLowerCase();
+            //if (searchText === "") {
+            //    return;
+            //}
+            let newList = [];
+            if (choice === "firstName") {
+                newList = empList.filter(record => {
+                    var str = record.firstName.toString().toLowerCase();
+                    return str.includes(searchText);
+                });
+            }
+            if (choice === "lastName") {
+                newList = empList.filter(record => {
+                    var str = record.lastName.toString().toLowerCase();
+                    return str.includes(searchText);
+                });
+            }
+            if (choice === "department") {
+                newList = empList.filter(record => {
+                    var str = record.department.toString().toLowerCase();
+                    return str.includes(searchText);
+                });
+            }
+            if (choice === "gender") {
+                newList = empList.filter(record => {
+                    var str = record.gender.toString().toLowerCase();
+                    return str.includes(searchText);
+                });
+            }
+
+            $("#row").empty();
+            var trHTML = '';
+            for (var i = 0; i < newList.length; i++) {
+                //trHTML += '<tr><td>' + response[i].firstName + '</td><td>' + response[i].lastName + '</td><td>' + "" + '</td></tr>';
+                trHTML += '<tr>';
+                trHTML += '<td>' + newList[i].firstName + '</td>';
+                trHTML += '<td>' + newList[i].lastName + '</td>';
+                trHTML += '<td>' + newList[i].gender + '</td>';
+                trHTML += '<td>' + newList[i].department + '</td>';
+                trHTML += '<td>';
+                for (var j = 0; j < newList[i].skills.length; j++) {
+                    trHTML += ' ' + newList[i].skills[j] + ',';
+                }
+                trHTML += '</td>';
+                trHTML += '</tr>';
+            }
+            $('#row').append(trHTML);
+        });
+        $("#dropdown").change(function () {
+            let choice = $("#dropdown").val();
+            let searchText = $("#fName").val().toLowerCase();
+            //if (searchText === "") {
+            //    return;
+            //}
+            let newList = [];
+            if (choice === "firstName") {
+                newList = empList.filter(record => {
+                    var str = record.firstName.toString().toLowerCase();
+                    return str.includes(searchText);
+                });
+            }
+            if (choice === "lastName") {
+                newList = empList.filter(record => {
+                    var str = record.lastName.toString().toLowerCase();
+                    return str.includes(searchText);
+                });
+            }
+            if (choice === "department") {
+                newList = empList.filter(record => {
+                    var str = record.department.toString().toLowerCase();
+                    return str.includes(searchText);
+                });
+            }
+            if (choice === "gender") {
+                newList = empList.filter(record => {
+                    var str = record.gender.toString().toLowerCase();
+                    return str.includes(searchText);
+                });
+            }
+
+            $("#row").empty();
+            var trHTML = '';
+            for (var i = 0; i < newList.length; i++) {
+                //trHTML += '<tr><td>' + response[i].firstName + '</td><td>' + response[i].lastName + '</td><td>' + "" + '</td></tr>';
+                trHTML += '<tr>';
+                trHTML += '<td>' + newList[i].firstName + '</td>';
+                trHTML += '<td>' + newList[i].lastName + '</td>';
+                trHTML += '<td>' + newList[i].gender + '</td>';
+                trHTML += '<td>' + newList[i].department + '</td>';
+                trHTML += '<td>';
+                for (var j = 0; j < newList[i].skills.length; j++) {
+                    trHTML += ' ' + newList[i].skills[j] + ',';
+                }
+                trHTML += '</td>';
+                trHTML += '</tr>';
+            }
+            $('#row').append(trHTML);
+        });
+
+
+
+
+    });
+
+
+
+</script>
+<div>
+    <select id="dropdown" name="drop" style="font-size:larger; font-weight:bolder">
+        <option value="firstName">First Name</option>
+        <option value="lastName">Last Name</option>
+        <option value="department">Department</option>
+        <option value="gender">Gender</option>
+    </select><br />
+    <input class="form-control" id="fName" placeholder="Search By Name" type="search" style="width:50%; font-size:larger" /><button id="fNameBtn" class="btn btn-danger">Search By Name</button>
+    <button id="btn" class="btn btn-warning">Search</button><br />
+    <h2> Employee List</h2>
+    <div id="plist">
+        <table class="table table-striped" style="border: 1px solid black;">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Gender</th>
+                    <th>Department</th>
+                    <th>Skills</th>
+                </tr>
+            </thead>
+            <tbody id="row">
+            </tbody>
+        </table>
+
+    </div>
+</div>

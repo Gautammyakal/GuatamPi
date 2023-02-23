@@ -1,0 +1,566 @@
+﻿<script>
+    $(document).ready(function () {
+        var empList = [];
+        var newList = [];
+        var statusBtn = "";
+
+     
+      //  alert("Auto");
+        $.ajax({
+            url: "/api/Employee",
+            type: "GET",
+            success: function (response) {
+                empList = response;
+                console.log(response);
+                // var trHTML = '';
+                //$.each(response, function (i, item) {
+                //    trHTML += '<tr><td>' + item.firstname + '</td><td>' + item.lastname + '</td><td>' + "" + '</td></tr>';
+                //});
+                //for (var i = 0; i < response.length; i++) 
+                //{
+
+
+                //    trHTML += '<tr>';
+                //    trHTML += '<td> <a  href="/Home/Details/' + response[i].empId + '">Details </a> </td>';
+
+                //    trHTML += '<td>' + response[i].firstName + '</td>';
+                //    trHTML += '<td>' + response[i].lastName + '</td>';
+                //    trHTML += '<td>' + response[i].dateOfBirth + '</td>';
+                //    //(new Date(dateOfBirth).getFullYear() + '-' + ('0' + (new Date(dateOfBirth).getMonth() + 1)).slice(-2) + '-' + ('0' + new Date(dateOfBirth).getDate()).slice(-2))
+                //    trHTML += '<td>' + response[i].gender + '</td>';
+                //    trHTML += '<td>' + response[i].department + '</td>';
+                //    trHTML += '<td>' + response[i].designation + '</td>';
+                //    trHTML += '<td>';
+                //    for (var j = 0; j < response[i].skills.length; j++) {
+                //        trHTML += ' ' + response[i].skills[j] + ',';
+                //                                                        }
+                //    trHTML += '</td>';
+                //    trHTML += '<td>' + response[i].isActive + '</td>';
+                //    trHTML += '</tr>';
+                //}
+                // $('#row').append(trHTML);
+                if (localStorage.getItem('backClicked') === 'true') {
+                    localStorage.removeItem('backClicked');
+                  
+                  //  console.log("BackClicked in ajax");
+                    if (localStorage.getItem('activeClicked') === 'true'){
+                        localStorage.removeItem('activeClicked');
+                        //$('#search').click();
+                        $('#active').click();
+                        $('#search').click();
+                    }else{
+                        $('#inActive').click();
+                          $('#search').click();
+                      
+                    }
+
+                }
+                else{
+                   // console.log("Else");
+                    $('#btn').click();
+                }
+
+                 
+                
+            }
+        });
+
+
+        $("#btn").click(function () {
+           // alert("btn");
+            $.ajax({
+                url: "/api/Employee",
+                type: "GET",
+                success: function (response) {
+                    empList = response;
+                    console.log(response);
+                    $("#row").empty();
+                    var trHTML = '';
+                    //$.each(response, function (i, item) {
+                    //    trHTML += '<tr><td>' + item.firstname + '</td><td>' + item.lastname + '</td><td>' + "" + '</td></tr>';
+                    //});
+                       
+
+
+                    for (var i = 0; i < response.length; i++) {
+                        //trHTML += '<tr><td>' + response[i].firstName + '</td><td>' + response[i].lastName + '</td><td>' + "" + '</td></tr>';
+                        trHTML += '<tr>';
+                        //  trHTML += '<td>' + '<a href="/Home/Details/5">'+Details+ '</a>'+ '</td>'
+                        trHTML += '<td> <a  href="/Home/Details/' + response[i].empId + '">View </a> </td>';
+                        trHTML += '<td>' + response[i].firstName + '</td>';
+                        trHTML += '<td>' + response[i].lastName + '</td>';
+                        trHTML += '<td>' + response[i].dateOfBirth + '</td>';
+                        trHTML += '<td>' + response[i].gender + '</td>';
+                        trHTML += '<td>' + response[i].department + '</td>';
+                        trHTML += '<td>' + response[i].designation + '</td>';
+                        trHTML += '<td>';
+                        for (var j = 0; j < response[i].skills.length; j++) {
+                            trHTML += ' ' + response[i].skills[j] + ',';
+                        }
+                        trHTML += '</td>';
+                        trHTML += '<td>' + response[i].isActive + '</td>';
+                        trHTML += '</tr>';
+                    }
+                    $('#row').append(trHTML);
+                }
+            });
+
+        });
+
+        $("#search").click(function(){
+           // alert("search")
+            var firstname = $("#firstname").val().toString().toLowerCase();
+            var lastname = $("#lastname").val().toString().toLowerCase();
+            var designation = $("#designation").val().toString().toLowerCase();
+            var department = $("#department").val().toString().toLowerCase();
+            var gender = $("#gender").val().toString().toLowerCase();
+            var fromDate = $("#fromdate").val().toString().toLowerCase();
+            var toDate = $("#todate").val().toString().toLowerCase();
+
+            var startDate = new Date(Date.parse(fromDate));
+            
+           
+            var endDate = new Date(Date.parse(toDate));
+            var List =[];
+            if (statusBtn == "true"){
+                let isActive = $("#active").val();
+                console.log(isActive);
+                List = empList.filter(record => {
+                    // console.log(record.isActive);
+                    var str = record.isActive.toString();
+                    //  console.log(str.includes(isActive));
+                    return str.includes(isActive);
+                });
+            }
+            else if(statusBtn == "false"){
+                let isActive = $("#inActive").val();
+                List = empList.filter(record => {
+                    // console.log(record.isActive);
+                    var str = record.isActive.toString();
+                    //  console.log(str.includes(isActive));
+                    return str.includes(isActive);
+                });
+            }else if(statusBtn == ""){
+                List =empList;
+            }
+           
+
+             
+
+            //if(startDate == "Invalid Date"){
+            //    console.log("Invalid");
+
+
+            //} //end of if
+            if (firstname != undefined && lastname != undefined && designation != undefined && department != undefined && fromDate == "" && toDate == "") {
+                newList = List.filter(record => {
+                    console.log("Both");
+                    var str = record.firstName.toString().toLowerCase();
+
+                    var str1 = record.lastName.toString().toLowerCase();
+                    var str2 = record.designation.toString().toLowerCase();
+                    var str3 = record.department.toString().toLowerCase();
+                    var str4 = record.gender.toString().toLowerCase();
+                    var str5 = new Date(Date.parse(record.dateOfBirth));
+
+                    // console.log(str2.includes(department));
+                    return str.includes(firstname) && str1.includes(lastname) && str2.includes(designation) && str3.includes(department) && str4.startsWith(gender) || str5 >= startDate || str5 <= endDate;
+
+                });
+            }
+            if (firstname != undefined && lastname != undefined && designation != undefined && department != undefined && fromDate == "" && toDate !="") {
+               
+                 newList = List.filter(record => {
+                 
+                    var str = record.firstName.toString().toLowerCase();
+                  
+                    var str1 = record.lastName.toString().toLowerCase();
+                    var str2 = record.designation.toString().toLowerCase();
+                    var str3 = record.department.toString().toLowerCase();
+                    var str4 = record.gender.toString().toLowerCase();
+                    var str5 = new Date(Date.parse(record.dateOfBirth));
+                    
+                   // console.log(str2.includes(department));
+                    return str.includes(firstname) && str1.includes(lastname) && str2.includes(designation) && str3.includes(department) && str4.startsWith(gender) && str5 <= endDate;
+                   
+                });
+            }
+            if (firstname != undefined && lastname != undefined && designation != undefined && department != undefined && toDate == "" && fromDate!="") {
+                newList = List.filter(record => {
+                    console.log("Todate");
+                    var str = record.firstName.toString().toLowerCase();
+
+                    var str1 = record.lastName.toString().toLowerCase();
+                    var str2 = record.designation.toString().toLowerCase();
+                    var str3 = record.department.toString().toLowerCase();
+                    var str4 = record.gender.toString().toLowerCase();
+                    var str5 = new Date(Date.parse(record.dateOfBirth));
+
+                    // console.log(str2.includes(department));
+                    return str.includes(firstname) && str1.includes(lastname) && str2.includes(designation) && str3.includes(department) && str4.startsWith(gender) && str5 >= startDate;
+
+                });
+            }
+      
+            if (firstname != undefined && lastname != undefined && designation != undefined && department != undefined && fromDate!="" && toDate!="") {
+                newList = List.filter(record => {
+                    console.log("Both");
+                    var str = record.firstName.toString().toLowerCase();
+
+                    var str1 = record.lastName.toString().toLowerCase();
+                    var str2 = record.designation.toString().toLowerCase();
+                    var str3 = record.department.toString().toLowerCase();
+                    var str4 = record.gender.toString().toLowerCase();
+                    var str5 = new Date(Date.parse(record.dateOfBirth));
+
+                    // console.log(str2.includes(department));
+                    return str.includes(firstname) && str1.includes(lastname) && str2.includes(designation) && str3.includes(department) && str4.startsWith(gender) && str5 >= startDate && str5 <= endDate;
+
+                });
+            }
+   
+
+
+            $("#row").empty();
+            console.log(newList);
+            var trHTML = '';
+            //$.each(response, function (i, item) {
+            //    trHTML += '<tr><td>' + item.firstname + '</td><td>' + item.lastname + '</td><td>' + "" + '</td></tr>';
+            //});
+            for (var i = 0; i < newList.length; i++) {
+
+
+                trHTML += '<tr>';
+                trHTML += '<td> <a  href="/Home/Details/' + newList[i].empId + '">View </a> </td>';
+
+                trHTML += '<td>' + newList[i].firstName + '</td>';
+                trHTML += '<td>' + newList[i].lastName + '</td>';
+                trHTML += '<td>' + newList[i].dateOfBirth + '</td>';
+                trHTML += '<td>' + newList[i].gender + '</td>';
+                trHTML += '<td>' + newList[i].department + '</td>';
+                trHTML += '<td>' + newList[i].designation + '</td>';
+                trHTML += '<td>';
+                for (var j = 0; j < newList[i].skills.length; j++) {
+                    trHTML += ' ' + newList[i].skills[j] + ',';
+                }
+                trHTML += '</td>';
+                trHTML += '<td>' + newList[i].isActive + '</td>';
+                trHTML += '</tr>';
+            }
+
+            $('#row').append(trHTML);
+
+          
+
+        });
+
+ 
+
+        $("#active").click(function () {
+            statusBtn = "true";
+            localStorage.removeItem('inActiveClicked');
+           // console.log(localStorage.removeItem('inActiveClicked'));
+            localStorage.setItem('activeClicked', 'true');
+
+            let isActive = $("#active").val();
+          //  console.log(isActive);
+
+             newList = empList.filter(record => {
+              //  console.log(record.isActive);
+                var str = record.isActive.toString();
+              //  console.log(str.includes(isActive));
+                return str.includes(isActive);
+            });
+            $("#row").empty();
+            console.log(newList);
+            var trHTML = '';
+            for (var i = 0; i < newList.length; i++) {
+                //trHTML += '<tr><td>' + response[i].firstName + '</td><td>' + response[i].lastName + '</td><td>' + "" + '</td></tr>';
+                trHTML += '<tr>';
+                trHTML += '<td> <a  href="/Home/Details/' + newList[i].empId + '">View </a> </td>';
+                trHTML += '<td>' + newList[i].firstName + '</td>';
+                trHTML += '<td>' + newList[i].lastName + '</td>';
+                trHTML += '<td>' + newList[i].dateOfBirth + '</td>';
+                trHTML += '<td>' + newList[i].gender + '</td>';
+                trHTML += '<td>' + newList[i].department + '</td>';
+                trHTML += '<td>' + newList[i].designation + '</td>';
+                trHTML += '<td>';
+                for (var j = 0; j < newList[i].skills.length; j++) {
+                    trHTML += ' ' + newList[i].skills[j] + ',';
+                }
+                trHTML += '</td>';
+                trHTML += '<td>' + newList[i].isActive + '</td>';
+                trHTML += '</tr>';
+            }
+            $('#row').append(trHTML);
+
+        });
+
+        $("#inActive").click(function () {
+            statusBtn = "false";
+            localStorage.removeItem('activeClicked');
+           localStorage.setItem('inActiveClicked', 'true');
+            let isActive = $("#inActive").val();
+          //  console.log(isActive);
+
+             newList = empList.filter(record => {
+               // console.log(record.isActive);
+                var str = record.isActive.toString();
+              //  console.log(str.includes(isActive));
+                return str.includes(isActive);
+            });
+            $("#row").empty();
+           
+            console.log(newList);
+            var trHTML = '';
+            for (var i = 0; i < newList.length; i++) {
+                //trHTML += '<tr><td>' + response[i].firstName + '</td><td>' + response[i].lastName + '</td><td>' + "" + '</td></tr>';
+                trHTML += '<tr>';
+                trHTML += '<td> <a  href="/Home/Details/' + newList[i].empId + '">View </a> </td>';
+                trHTML += '<td>' + newList[i].firstName + '</td>';
+                trHTML += '<td>' + newList[i].lastName + '</td>';
+                trHTML += '<td>' + newList[i].dateOfBirth + '</td>';
+                trHTML += '<td>' + newList[i].gender + '</td>';
+                trHTML += '<td>' + newList[i].department + '</td>';
+                trHTML += '<td>' + newList[i].designation + '</td>';
+                trHTML += '<td>';
+                for (var j = 0; j < newList[i].skills.length; j++) {
+                    trHTML += ' ' + newList[i].skills[j] + ',';
+                }
+                trHTML += '</td>';
+                trHTML += '<td>' + newList[i].isActive + '</td>';
+                trHTML += '</tr>';
+            }
+            $('#row').append(trHTML);
+
+        });
+
+        $("#searchbyskills").click(function () {
+          alert("skills");
+            var fav = [];
+            $.each($("input[name='skills']:checked"), function () {
+                fav.push($(this).val());
+                
+            }); //end of each
+            var List=[];
+            var skill =[];
+            var temp="";
+            empList.forEach(record => {
+                
+            });
+            List = empList.filter(record => {
+                var flag = false;
+                record.skills.forEach(rec => {
+                   fav.forEach(selectedSkill =>{
+                        if (rec.toLowerCase() === selectedSkill) {
+                           flag = true;
+                       }
+                   });
+                });
+                if(flag){
+                    return true;
+                }
+                return false;
+            });
+
+               $("#row").empty();
+            console.log(List);
+            var trHTML = '';
+            //$.each(response, function (i, item) {
+            //    trHTML += '<tr><td>' + item.firstname + '</td><td>' + item.lastname + '</td><td>' + "" + '</td></tr>';
+            //});
+            for (var i = 0; i < List.length; i++) {
+
+
+                trHTML += '<tr>';
+                trHTML += '<td> <a  href="/Home/Details/' + List[i].empId + '">View </a> </td>';
+
+                trHTML += '<td>' + List[i].firstName + '</td>';
+                trHTML += '<td>' + List[i].lastName + '</td>';
+                trHTML += '<td>' + List[i].dateOfBirth + '</td>';
+                trHTML += '<td>' + List[i].gender + '</td>';
+                trHTML += '<td>' + List[i].department + '</td>';
+                trHTML += '<td>' + List[i].designation + '</td>';
+                trHTML += '<td>';
+                for (var j = 0; j < List[i].skills.length; j++) {
+                    trHTML += ' ' + List[i].skills[j] + ',';
+                }
+                trHTML += '</td>';
+                trHTML += '<td>' + List[i].isActive + '</td>';
+                trHTML += '</tr>';
+            }
+
+            $('#row').append(trHTML);
+           //for( let k=0;k<fav.length;k++){
+           //   for( let j=0;j<empList.length;j++){
+
+           //     skill = empList[j].skills;
+           //     var temp=skill.join().toString().toLowerCase();
+           //     console.log(temp);
+               
+
+           //     List=empList.filter(record =>{
+           //         var str =temp.toString();
+                   
+           //         console.log(str.includes(fav[k].toString().toLowerCase()));
+                    
+           //         return str.includes(fav[k].toString().toLowerCase());
+
+                    
+           //     });
+               
+             
+           //   }
+           //}
+           
+        
+        });
+
+        $("#StoreBtn").click(function(){
+            var firstName = $("#firstname").val();
+
+            var data={
+                FirstName : firstName
+            }
+            debugger
+             $.ajax({
+            url: "/Home/active",
+            type: "GET",
+           
+            success: function (response) {
+                 
+                 alert("Data");
+                 console.log(response);
+               
+                    
+            }
+           
+             });
+
+            
+           
+           
+        });
+
+
+
+ });
+
+
+
+</script>
+<style>
+    #table {
+        width: 50%;
+        border: 1px solid black;
+    }
+</style>
+<div>
+    <div>
+    <form >
+        <table class="table table-success table-striped" style="margin-top:40px;text-align:center" id="table">
+           <tr>
+                <td> <label for="firstname">First Name:</label> </td>
+                <td> <input type="text" id="firstname" name="firstname" autofocus> </td>
+           </tr>
+           <tr>
+                <td> <label for="lastname">Last Name:</label></td>
+                <td>  <input type="text" id="lastname" name="lastname"> </td>
+           </tr>
+           <tr>
+                <td>  <label for="designation">Designation:</label></td>
+                <td> <input type="text" id="designation" name="designation"></td>
+           </tr>
+           <tr>
+                <td> <label for="department">Department:</label></td>
+                <td>  <input type="text" id="department" name="department"></td>
+           </tr>
+           <tr>
+                <td> <label for="gender">Gender:</label></td>
+                <td>
+                    <select id="gender" name="gender">
+                        <option value="">Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+
+                    </select>
+                </td>
+           </tr>
+           <tr>
+                <td> <label for="from-date">From Date:</label></td>
+                <td> <input type="date" id="fromdate" name="fromdate"></td>
+           </tr>
+           <tr>
+               <td>   <label for="to-date">To Date:</label></td>
+                <td> <input type="date" id="todate" name="todate"></td>
+           </tr>
+        </table>
+
+        <button class="btn btn-warning" type="button" id="search">Search</button>
+            <button type="reset" class="btn btn-dark"> Reset </button>
+@*        <button id="StoreBtn" class="btn btn-warning"> Data By StoreProcedure</button>
+*@    </form>
+
+    </div>
+    <hr />
+    <div>
+    <h6>Seacrch By Skills ::</h6>
+    <form id="search-form" >
+        <input type="checkbox" name="skills" value="java">JAVA</input>
+       
+        <input type="checkbox" name="skills" value="python">PYTHON</input>
+       
+        <input type="checkbox" name="skills" value="reactjs">ReactJs</input>
+        <input type="checkbox" name="skills" value="html">HTML</input>
+        <input type="checkbox" name="skills" value="css">CSS</input>
+
+
+        <button class="btn btn-success" type="button" name="searchbyskills" id="searchbyskills" value="searchbyskills">Search By Skills</button> 
+</form>
+    </div>
+
+  
+    
+    <hr />
+    <div>
+    <button id="btn" class="btn btn-warning" >Btn</button>
+        
+    </div>
+    
+     @*<button id="btn" class="btn btn-warning"> BTN</button>*@
+    <h2> Employee List</h2>
+    <button class="btn btn-success" id="active" value="1">Active</button> <button class="btn btn-secondary" id="inActive" value="0">InActive</button>
+    <div id="plist">
+        <table class="table table-striped" style="border: 1px solid black;">
+            <thead>
+                <tr>
+                    <th>ACTION</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>DateOfBirth</th>
+                    <th>Gender</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Skills</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="row">
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<hr />
+
+
+
+
+
+
+
+
+
+
+

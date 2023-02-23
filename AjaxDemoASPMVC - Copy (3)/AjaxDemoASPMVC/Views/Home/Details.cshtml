@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var emp = ViewBag.Employee1;
+}
+
+<div style="border-block-color : black">
+    <h4>Employee Details</h4>
+    <hr />
+    <dl class="row" style="border:orange; border-width:5px; border-style:solid;">
+        <dt class="col-sm-2" >
+          FirstName
+        </dt>
+        <dd class="col-sm-10" id="firstName" >
+            @emp.FirstName
+        </dd>
+        <dt class="col-sm-2" >
+           LastName
+        </dt>
+        <dd class="col-sm-10" id="lastName" >
+            @emp.LastName
+        </dd>
+        <dt class="col-sm-2">
+           DateOfBirth
+        </dt>
+        <dd class="col-sm-10">
+            @emp.DateOfBirth
+        </dd>
+        <dt class="col-sm-2">
+           Salary
+        </dt>
+        <dd class="col-sm-10">
+            @emp.Salary
+        </dd>
+        <dt class="col-sm-2">
+            Gender
+        </dt>
+        <dd class="col-sm-10">
+            @emp.gender1.Gender_Name
+        </dd>
+        <dt class="col-sm-2">
+            Department
+        </dt>
+        <dd class="col-sm-10">
+            @emp.depaartment1.Dept_Name
+        </dd>
+        <dt class="col-sm-2">
+            Designation
+        </dt>
+        <dd class="col-sm-10">
+            @emp.designation1.Designation_Name
+        </dd>
+        <dt class="col-sm-2">
+            Skills
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var sk in @emp.employeeSkill1)
+            {
+                <text>@sk.skill1s.Skill_Name &nbsp </text>
+            }
+        </dd>
+
+    </dl>
+</div>
+<div>
+    
+
+    <button type="button" id="back">Back</button>
+  
+    <a asp-action="Index">Cancel</a>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#back").click(function () {
+          //  alert("back btn clicked");
+            localStorage.setItem('backClicked', 'true');
+            alert("Back");
+            if (localStorage.getItem('activeClicked') === 'true') { localStorage.setItem('activeClicked', 'true'); } 
+           // if (localStorage.getItem('inActiveClicked') === 'true') { localStorage.setItem('inActiveClicked', 'true'); }
+            else{ localStorage.setItem('inActiveclicked','true');}
+              
+             window.history.back();
+          });
+    
+    })
+</script>
+

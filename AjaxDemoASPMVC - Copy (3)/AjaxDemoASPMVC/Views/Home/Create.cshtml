@@ -1,0 +1,129 @@
+﻿@model AjaxDemoASPMVC.Models.BindData
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Create";
+
+    //All Data from Data BAse
+    var gender = ViewBag.Genders;
+    var department = ViewBag.Departments;
+    var designation = ViewBag.Designations; /*null here*/
+    var skills = ViewBag.Skills;  // Skills From DATABASE
+}
+
+
+<h1>Create</h1>
+
+
+<h4>bindemp</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+            <div class="form-group">
+                <label asp-for="bindemp.FirstName" class="control-label"></label>
+                <input asp-for="bindemp.FirstName" class="form-control" placeholder="Enter The Name" autofocus/>
+                <span asp-validation-for="bindemp.FirstName" class="text-danger" ></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="bindemp.LastName" class="control-label"></label>
+                <input asp-for="bindemp.LastName" class="form-control" placeholder="Enter the LastName"/>
+                <span asp-validation-for="bindemp.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="bindemp.DateOfBirth" class="control-label"></label>
+                <input id="txtDobDate" asp-for="bindemp.DateOfBirth" class="form-control" placeholder="27-07-1996" />
+           
+                <span asp-validation-for="bindemp.DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="bindemp.Salary" class="control-label"></label>
+                <input asp-for="bindemp.Salary" class="form-control" />
+                <span asp-validation-for="bindemp.Salary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="genderId" class="control-label"></label>
+                <select class="form-control" asp-for="genderId" asp-items="@(new SelectList(gender,"Gender1Id" ,"Gender_Name"))">
+                    <option value="">Select GENDER</option>
+                </select>
+                @*<span asp-validation-for="genderId" class="text-danger"></span>*@
+
+            </div>
+            <div class="form-group">
+                <label asp-for="departmentId" class="control-label"></label>
+                <select class="form-control" asp-for="departmentId" asp-items="@(new SelectList(department,"Department1Id" ,"Dept_Name"))">
+                    <option value="">Select Dept </option>
+                </select>
+                @*<span asp-validation-for="departmentId" class="text-danger"></span>*@
+
+
+            </div>
+
+            <div class="form-group">
+                <label asp-for="designationId" class="control-label"></label>
+                <select class="form-control" asp-for="designationId"
+                        asp-items="@(new SelectList(designation,"Designation1Id" ,"Designation_Name"))">
+                    <option value="">Select Designation</option>
+                </select>
+                @*<span asp-validation-for="designationId" class="text-danger"></span>*@
+
+            </div>
+          <div class="form-group">
+                <label asp-for="bindSkillId" class="control-label"></label>
+                <select class="form-control" asp-for="bindSkillId"
+                        asp-items="@(new SelectList(Model.bindskill,"Skill1Id" ,"Skill_Name"))">
+                    <option value="">Select Skills</option>
+                </select>
+                <span asp-validation-for="bindSkillId" class="text-danger"></span>
+            </div>
+
+          @*  <div>
+                <label>Select Skill </label>
+                <br />
+
+                @{
+                    foreach (var skill in skills)
+                    {
+
+                <input  type="checkbox" name="empskills" value=@skill.Skill_Name />
+                        <label>@skill.Skill_Name</label>
+                    }
+                }
+            </div>*@
+
+
+           
+
+            @*  <div class="form-group">
+            <label>Select your Skills:</label>
+            <br />
+            @foreach (var interest in skills)
+            {
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" asp-for="bindSkillId" value="bindSkillId">
+            <label class="form-check-label" for="bindSkillId">bindSkillName</label>
+            </div>
+            <br />
+            }
+            </div>*@
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

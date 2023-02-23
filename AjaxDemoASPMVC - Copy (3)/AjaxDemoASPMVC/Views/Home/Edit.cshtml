@@ -1,0 +1,124 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model AjaxDemoASPMVC.Models.Employee1
+@{
+    ViewData["Title"] = "Edit";
+    var gender = ViewBag.Genders;
+    var department = ViewBag.Departments;
+    var designation = ViewBag.Designations; /*null here*/
+    var skills = ViewBag.Skills;
+    // var emp = ViewBag.Employee1;
+  //  var skill2s = ViewBag.newempskills;
+
+    }
+
+<h1>Edit</h1>
+
+<h4>EntityEmployee</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="Employee1Id" class="control-label"></label>
+                <input asp-for="Employee1Id" class="form-control" />
+                <span asp-validation-for="Employee1Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfBirth" class="control-label"></label>
+                <input asp-for="DateOfBirth" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salary" class="control-label"></label>
+                <input asp-for="Salary" class="form-control" />
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+       @*    <div class="form-group">
+                <label asp-for="gender1.Gender_Name" class="control-label"></label>
+                <input asp-for="gender1.Gender_Name" class="form-control" />
+                <span asp-validation-for="gender1.Gender_Name" class="text-danger"></span>
+            </div>*@
+
+              <div class="form-group">
+                <label asp-for="gender1.Gender1Id" class="control-label"></label>
+                <select class="form-control" asp-for="gender1.Gender1Id" asp-items="@(new SelectList(gender,"Gender1Id" ,"Gender_Name"))">
+                    <option value="">--Select GENDER --</option>
+                </select>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="depaartment1.Department1Id" class="control-label"></label>
+                <select class="form-control" asp-for="depaartment1.Department1Id" asp-items="@(new SelectList(department,"Department1Id" ,"Dept_Name"))">
+                    <option value="">--Select Dept --</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <label asp-for="designation1.Designation1Id" class="control-label"></label>
+                <select class="form-control" asp-for="designation1.Designation1Id" asp-items="@(new SelectList(designation,"Designation1Id" ,"Designation_Name"))">
+                    <option value="">--Select Designation --</option>
+                </select>
+
+            </div>
+
+            <div>
+                <label>Select Skill </label>
+                <br />
+
+                @{
+                    foreach (var skill in skills)
+                    {
+                        var flag = false;
+                        @foreach (var sk in Model.employeeSkill1)
+                        {
+                            if (skill.Skill_Name == sk.skill1s.Skill_Name)
+                            {
+                                flag = true;
+                                <input type="checkbox" name="Arjun"value=@skill.Skill_Name checked="checked" />
+                                <label>@skill.Skill_Name</label>
+
+                            }
+                        }
+                        if (flag)
+                        {
+                            continue; 
+                        }
+                        <input type="checkbox" name="Arjun" value=@skill.Skill_Name />
+                        <label>@skill.Skill_Name</label>
+                    }
+                }
+            </div>
+
+          
+            
+            @*  You Canot Change The Gender Once You entered
+            *@
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>  
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}}

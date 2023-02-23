@@ -1,0 +1,136 @@
+﻿@model BindData
+@{
+    // ViewData["Title"] = "Home Page";
+    var emp = ViewBag.Employee1;
+
+
+
+}
+
+<script>
+    $(document).ready(function () {
+        $("#searchByFL").click(function () {
+            $.ajax({
+                url: "/Employee/SearchBy/",
+                type: "POST",
+                success: function (response) {
+                    alert("Success")
+                    var trHTML = '';
+                    $.each(response, function (i, item) {
+                        trHTML += '<tr><td>' + item.FirstName + '</td><td>' + item.LastName + '</td><td>' + item.Designation + '</td></tr>';
+                    });
+                    $('#plist').append(trHTML);
+                }
+            });
+        });
+
+
+</script>
+<div>
+    <a asp-action="Create">Create</a>
+
+</div>
+
+    FIRSTNAME ::
+<input type="search" id="FirstName" />
+<br />
+    LASTNAME  ::
+<input type="search" id="LastName" />
+<br />
+    Department ::
+<input type="search" id="Department" />
+<br />
+    Designation ::
+<input type="search" id="Designation" />
+<br />
+    Gender :: Male: @Html.RadioButton("Gender","Male") Female: @Html.RadioButton("Gender","Female") </pre>
+
+<button type="button" id="searchByFL">Search</button>
+
+<div class="plist" id="plist">
+     <table class="table table-striped" id="tableList">
+    <thead>
+    <tr>
+    <th>
+    EmployeeId
+    </th>
+    <th>
+    FirstName
+    </th>
+    <th>
+    LastName
+    </th>
+    <th>
+    DOB
+    </th>
+    <th>
+    Salary
+    </th>
+    <th>
+    Gender
+    </th>
+    <th>
+    Department
+    </th>
+    <th>
+    Designation
+    </th>
+    <th>
+    Skills
+    </th>
+
+    </tr>
+    </thead>
+    <tbody id="DataSearching">
+    @foreach (var item in emp)
+    {
+    <tr>
+    <td>
+    <a asp-action="Details" asp-route-id="@item.Employee1Id">Details</a> |
+    </td>
+
+    <td>
+    @item.Employee1Id
+    </td>
+    <td>
+    @item.FirstName
+    </td>
+    <td>
+    @item.LastName
+    </td>
+    <td>
+    @item.DateOfBirth
+    </td>
+    <td>
+    @item.Salary
+    </td>
+    <td>
+    @item.gender1.Gender_Name
+    </td>
+    <td>
+    @item.depaartment1.Dept_Name
+    </td>
+    <td>
+    @item.designation1.Designation_Name
+    </td>
+    <td>
+    @foreach (var sk in @item.employeeSkill1)
+    {
+    <text>@sk.skill1s.Skill_Name &nbsp </text>
+    }
+    </td>
+
+
+    </tr>
+    }
+    </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+
+
